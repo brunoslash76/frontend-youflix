@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="favDarkGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2D3137" />
+      <stop offset="100%" stop-color="#141619" />
+    </linearGradient>
+
+    <!-- Red Gradient -->
+    <linearGradient id="favRedGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF0000" />
+      <stop offset="100%" stop-color="#B81D24" />
+    </linearGradient>
+
+    <!-- Subtle Drop Shadow -->
+    <filter id="favShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Rounded Square Container -->
+  <rect x="0" y="0" width="512" height="512" rx="110" fill="url(#favDarkGrad)" />
+
+  <!-- Centered Y + Play Icon -->
+  <g transform="translate(135, 105)" filter="url(#favShadow)">
+    <!-- Y Left Arm & Stem -->
+    <path d="M 25,15 L 105,135 L 105,260 C 105,275 93,285 78,285 L 62,285 C 47,285 35,275 35,260 L 35,160 L -15,50 C -25,30 -10,15 12,15 Z" fill="url(#favRedGrad)" />
+    
+    <!-- Y Right Arm Shield -->
+    <path d="M 85,115 L 210,40 C 230,28 250,45 242,68 L 190,185 C 180,205 150,212 130,195 Z" fill="url(#favRedGrad)" />
+    
+    <!-- Play Triangle -->
+    <polygon points="105,85 160,118 105,151" fill="#FFFFFF" />
+  </g>
+</svg>
