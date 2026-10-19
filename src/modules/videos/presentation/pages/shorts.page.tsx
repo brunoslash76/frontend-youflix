@@ -1,0 +1,7 @@
+export const ShortsPage = () => {
+  return (
+    <div>
+      <h1>Shorts</h1>
+    </div>
+  )
+}

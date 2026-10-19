@@ -1,7 +1,7 @@
 import { useLoginMutation } from "@/modules/auth/infra/api/auth.api"
 import { Logo } from "@/shared/assets/logo"
-import { Button } from "@/shared/components/atoms/button/Button.component"
-import { Input } from "@/shared/components/atoms/input/Input.component"
+import { Button } from "@/shared/components/atoms/button.component"
+import { Input } from "@/shared/components/atoms/input.component"
 import { useActionState, } from "react"
 import { Link, useLocation, useNavigate } from "react-router"
 

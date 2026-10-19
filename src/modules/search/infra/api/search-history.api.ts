@@ -2,7 +2,7 @@ import { api } from "@/shared/store/api";
 import type { SearchHistoryEntry } from "../../domain/entities/search-history-entry.entity";
 
 export const searchHistoryApi = api
-  .enhanceEndpoints({ addTagTypes: ['SearchHistory'] })
+  .enhanceEndpoints({ addTagTypes: ['SearchHistory', 'Feed'] })
   .injectEndpoints({
     endpoints: (build) => ({
       getSearchSuggestions: build.query<string[], string>({
@@ -12,11 +12,11 @@ export const searchHistoryApi = api
       }),
       recordSearch: build.mutation<{ success: boolean }, { term: string }>({
         query: (body) => ({ url: 'search-history', method: 'POST', body }),
-        invalidatesTags: ['SearchHistory'],
+        invalidatesTags: ['SearchHistory', 'Feed'],
       }),
       importSearchHistory: build.mutation<{ success: boolean }, SearchHistoryEntry[]>({
         query: (entries) => ({ url: 'search-history/import', method: 'POST', body: { entries } }),
-        invalidatesTags: ['SearchHistory'],
+        invalidatesTags: ['SearchHistory', 'Feed'],
       }),
     })
   })

@@ -15,9 +15,11 @@
   --color-primary: #d3d3d3;
   --color-primary-light: #6e6e6e;
   --color-primary-ghost: #111111;
+  --color-primary-ghost-transparent: #111111cc; /* 75% opacity */
   --color-background: #333333;
   --color-success: #36b630;
   --color-info: #0084c6;
+  --color-info-light: #00a8e8;
   --color-warning: #e4b91c;
   --color-danger: #d14d4d;
 }
@@ -38,7 +40,7 @@
 
 @layer base {
   html {
-    @apply bg-background text-primary;
+    @apply bg-primary-ghost text-primary;
     color-scheme: dark;
   }
 

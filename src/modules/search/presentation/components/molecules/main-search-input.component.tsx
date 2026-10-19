@@ -1,5 +1,5 @@
 import { useDebouncedValue } from "@/shared/hooks/use-debounced-value.hook"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useSearchSuggestions } from "../../hooks/use-search-suggestions.hook"
 
 interface MainSearchInputProps {
@@ -11,6 +11,7 @@ export const MainSearchInput = ({ onSearch }: MainSearchInputProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const query = useDebouncedValue(value, 200)
   const { suggestions, record } = useSearchSuggestions(query)
+  const formRef = useRef<HTMLFormElement>(null)
 
   const submit = (term: string) => {
     const trimmed = term.trim()
@@ -25,15 +26,22 @@ export const MainSearchInput = ({ onSearch }: MainSearchInputProps) => {
 
   return (
     <form
+      ref={formRef}
       role="search"
-      className="relative"
+      className="relative w-full max-w-lg"
       onSubmit={(event) => {
         event.preventDefault()
         submit(value)
       }}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter') {
+          formRef.current?.submit()
+        }
+      }}
     >
       <input
         type="search"
+        className="border border-background-secondary rounded-full px-3 py-2 font-light w-full"
         placeholder="Search"
         aria-label="Search"
         autoComplete="off"

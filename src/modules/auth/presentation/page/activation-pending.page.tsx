@@ -1,5 +1,5 @@
 import { Logo } from "@/shared/assets/logo"
-import { Button } from "@/shared/components/atoms/button/Button.component"
+import { Button } from "@/shared/components/atoms/button.component"
 import { useEffect, useState } from "react"
 import { Navigate, useLocation, useNavigate } from "react-router"
 import { useResendActivationEmailMutation } from "../../infra/api/auth.api"
