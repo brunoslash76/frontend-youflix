@@ -1,4 +1,4 @@
-import type { AuthStatus } from "@/modules/auth/domain/types/auth-status.type";
+import type { AuthStatus } from "@/modules/auth/domain/types/status.type";
 
 export type GetHomeFeedArgs = {
   status: AuthStatus;
