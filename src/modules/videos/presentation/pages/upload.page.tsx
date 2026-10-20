@@ -1,5 +1,5 @@
 import { useMemo, useState, type SubmitEvent } from "react"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 
 import { Button } from "@/shared/components/atoms/button.component"
 import { Input } from "@/shared/components/atoms/input.component"
@@ -38,7 +38,7 @@ export const UploadPage = () => {
   const busy = phase === 'creating' || phase === 'uploading' || phase === 'completing'
   const { dragging } = useWindowFileDrop({ onDrop: onFileChange, disabled: busy })
   const [fieldErrors, setFieldErrors] = useState<{ title?: string, description?: string, genres?: string }>({})
-
+  const navigate = useNavigate()
   const validateDetails = () => {
     const next: typeof fieldErrors = {}
     if (title.trim().length < 7) next.title = 'Title must be at least 7 characters.'
@@ -80,8 +80,6 @@ export const UploadPage = () => {
     if (!file || busy) return
 
     try {
-
-
       let thumbnail: { thumbnailIndex?: number; customThumbnailKey?: string } | undefined;
 
       if (choice?.source === 'custom') {
@@ -99,6 +97,7 @@ export const UploadPage = () => {
       } else if (choice?.source === 'suggested') {
         thumbnail = { thumbnailIndex: choice.index }
       }
+
       await updateVideoDetails({
         publicId,
         title,
@@ -106,6 +105,7 @@ export const UploadPage = () => {
         genreIds,
         ...thumbnail,
       }).unwrap()
+      navigate({ pathname: '/watch', search: `?v=${publicId}` })
       notify('Video details saved')
     } catch (error) {
       console.error(error)
@@ -154,6 +154,14 @@ export const UploadPage = () => {
             <span>Drag & drop or click to choose a video</span>
           )}
         </label>
+        {publicId && file && (
+          <>
+            <ThumbnailPicker publicId={publicId} file={file} value={choice} onChange={setChoice} />
+            <Link to={'/'} className="text-info-light underline">
+              Open video
+            </Link>
+          </>
+        )}
         <Input
           label="Title"
           value={title}
@@ -217,14 +225,6 @@ export const UploadPage = () => {
           </div>
         )}
         <p className="text-sm">{phaseLabel}</p>
-        {publicId && file && (
-          <>
-            <ThumbnailPicker publicId={publicId} file={file} value={choice} onChange={setChoice} />
-            <Link to={'/'} className="text-info-light underline">
-              Open video
-            </Link>
-          </>
-        )}
         <div className="flex gap-3">
           <Button type="submit" disabled={!file || busy || saving}>
             {saving ? 'Saving...' : 'Save'}
