@@ -1,6 +1,7 @@
 import { useAppSelector } from "@/shared/store"
 import { useState } from "react"
 import { useGetHomeFeedQuery } from "../../infra/api/video.api"
+import { VideoListItemComponent } from "../components/molecules/video-list-item.component"
 import { VideosPageEmptyStateComponent } from "../components/organisms/videos-page-empty-state.component"
 
 export const VideosPage = () => {
@@ -12,19 +13,15 @@ export const VideosPage = () => {
   )
 
   if (status === 'checking' || isLoading) return <div>Loading...</div>
-  if (!videoFeed?.items?.length) return <VideosPageEmptyStateComponent /> 
+  if (!videoFeed?.items?.length) return <VideosPageEmptyStateComponent />
   return (
     <div className="bg-primary-ghost">
       <h1>{videoFeed?.personalized ? 'Recommended for you' : 'Latest videos'}</h1>
       <div>
         {videoFeed?.items.map(video => (
-          <div key={video.publicId}>
-            <h2>{video.title}</h2>
-            {/* <p>{video.description}</p>
-            <p>{video.createdAt}</p> */}
-          </div>
+          <VideoListItemComponent key={video.publicId} video={video} />
         ))}
       </div>
     </div>
   )
-} 
+}
