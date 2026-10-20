@@ -5,4 +5,5 @@ export interface RegisterQueryArg {
   phone: string
   firstName: string
   lastName: string
+  username: string
 }

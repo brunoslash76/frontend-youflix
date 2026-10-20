@@ -60,6 +60,14 @@ export const authApi = api.injectEndpoints({
         body,
       }),
     }),
+    // ** Validate Username ** 
+    validateUsername: build.mutation<{ success: boolean }, { username: string }>({
+      query: (body) => ({
+        url: '/user/validate-username',
+        method: 'POST',
+        body,
+      }),
+    }),
   })
 })
 
@@ -70,4 +78,5 @@ export const {
   useRegisterMutation,
   useActivateRegistrationMutation,
   useResendActivationEmailMutation,
+  useValidateUsernameMutation,
 } = authApi
