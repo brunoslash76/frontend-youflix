@@ -4,7 +4,7 @@ import { Button } from "@/shared/components/atoms/button.component"
 import { Input } from "@/shared/components/atoms/input.component"
 import { RotateCcw } from "lucide-react"
 import { useActionState, useState } from "react"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { useRegisterMutation, useValidateUsernameMutation } from "../../infra/api/auth.api"
 
 interface RegisterState {
@@ -20,6 +20,7 @@ export const RegisterPage = () => {
     error: validateUsernameError
   }] = useValidateUsernameMutation()
   const [uname, setUsername] = useState('')
+  const navigate = useNavigate()
   const [state, formAction] = useActionState<RegisterState, FormData>(async (_prev, formData) => {
     const email = String(formData.get('email') ?? '')
     const password = String(formData.get('password') ?? '')
@@ -39,6 +40,10 @@ export const RegisterPage = () => {
         lastName,
         username,
       }).unwrap()
+      navigate(
+        { pathname: '/', search: `?notice=activation-pending` },
+        { replace: true },
+      )
       return { success: true }
     } catch (error: unknown) {
       const message = (error as { data?: { message?: string | string[] } })?.data?.message
