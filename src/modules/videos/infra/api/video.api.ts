@@ -1,8 +1,11 @@
 import { api } from "@/shared/store/api";
 import type { CompleteUploadResponseDto } from "../../domain/dto/complete-upload-response.dto";
+import type { CreateThumbnailResponseDto } from "../../domain/dto/create-thumbnail-response.dto";
+import type { CreateThumbnailUploadDto } from "../../domain/dto/create-thumbnail-upload.dto";
 import type { CreateUploadRequestDto } from "../../domain/dto/create-upload-request.dto";
 import type { CreateUploadResponseDto } from "../../domain/dto/create-upload-response.dto";
 import type { HomeFeed } from "../../domain/dto/home-feed.dto";
+import type { VideoDetailResponseDto } from "../../domain/dto/video-detail-response.dto";
 import type { GenreEntity } from "../../domain/entity/genre.entity";
 import type { VideoDetailEntity } from "../../domain/entity/video-detail.entity";
 import type { GetHomeFeedArgs } from "../../domain/types/get-feed-args.type";
@@ -40,7 +43,19 @@ export const videoApi = api
           method: 'POST',
         }),
         invalidatesTags: ['Feed']
-      })
+      }),
+      // ** Upload Thumbnail **
+      createThumbnailUpload: build.mutation<CreateThumbnailResponseDto, CreateThumbnailUploadDto>({
+        query: ({ publicId, ...body }) => ({
+          url: `/video/${publicId}/thumbnail/upload-url`,
+          method: 'POST',
+          body,
+        }),
+      }),
+      updateVideoDetails: build.mutation<VideoDetailEntity, VideoDetailResponseDto>({
+        query: ({ publicId, ...body }) => ({ url: `/video/${publicId}`, method: 'PATCH', body }),
+        invalidatesTags: (_r, _e, { publicId }) => ['Feed', { type: 'Video' as const, id: publicId }],
+      }),
     }),
   })
 
@@ -52,4 +67,6 @@ export const {
   useCreateUploadMutation,
   useCompleteUploadMutation,
   usePrefetch,
+  useCreateThumbnailUploadMutation,
+  useUpdateVideoDetailsMutation,
 } = videoApi;

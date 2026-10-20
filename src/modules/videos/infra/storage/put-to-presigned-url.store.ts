@@ -5,7 +5,7 @@ interface PutToPresignedUrlOptions {
 
 export const putToPresignedUrlStore = (
   uploadUrl: string,
-  file: File,
+  file: Blob,
   { onProgress, signal }: PutToPresignedUrlOptions = {}
 ) =>
   new Promise<void>((resolve, reject) => {

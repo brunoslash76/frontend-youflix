@@ -1,7 +1,5 @@
 export interface CreateUploadRequestDto {
-  title: string
-  description: string
-  genreIds: string[]
+  filename: string
   contentType: string
   sizeBytes: number
 }

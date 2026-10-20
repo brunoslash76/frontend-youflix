@@ -10,6 +10,7 @@ export interface VideoDetailEntity {
   genres: GenreEntity[]
   watchUrl: string
   thumbnailUrl: string | null
+  thumbnailOptions: string[]
   author: {
     id: string
     firstName: string
