@@ -11,6 +11,8 @@ export interface VideoDetailEntity {
   watchUrl: string
   thumbnailUrl: string | null
   thumbnailOptions: string[]
+  streamUrl: string | null
+  durationSeconds: number | null
   author: {
     id: string
     firstName: string
