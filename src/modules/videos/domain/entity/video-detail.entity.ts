@@ -1,4 +1,6 @@
+import type { ProcessingProgress } from "../types/processing-progress.type"
 import type { VideoStatus } from "../types/video-status.type"
+import type { VideoStoryboard } from "../types/video-storyboard.type"
 import type { GenreEntity } from "./genre.entity"
 
 export interface VideoDetailEntity {
@@ -13,6 +15,8 @@ export interface VideoDetailEntity {
   thumbnailOptions: string[]
   streamUrl: string | null
   durationSeconds: number | null
+  processing: ProcessingProgress
+  storyboard: VideoStoryboard | null
   author: {
     id: string
     firstName: string
