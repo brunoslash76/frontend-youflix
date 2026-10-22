@@ -115,7 +115,7 @@ export const PlayerProgressBar = ({
       onPointerCancel={endScrub}
       onPointerLeave={onPointerLeave}
     >
-      <div className={`relative w-full bg-white/20 transition-[height] duration-150 ${scrubTime !== null ? 'h-[5px]' : 'h-[3px] group-hover/progress:h-[5px]'}`}>
+      <div className={`relative w-full bg-white/20 transition-[height] duration-150 ${scrubTime !== null ? 'h-1.25' : 'h-0.75 group-hover/progress:h-1.25'}`}>
         <div className="absolute inset-y-0 left-0 bg-white/40" style={{ width: percent(bufferedEnd) }} />
         {hover && <div className="absolute inset-y-0 left-0 bg-white/50" style={{ width: percent(hover.time) }} />}
         <div className="absolute inset-y-0 left-0 bg-player-accent" style={{ width: percent(shownTime) }} />
