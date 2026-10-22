@@ -5,6 +5,7 @@ import { Button } from "@/shared/components/atoms/button.component"
 import { Input } from "@/shared/components/atoms/input.component"
 import { FileDropOverlay } from "@/shared/components/organisms/file-drop-overlay.component"
 import { useWindowFileDrop } from "@/shared/hooks/use-window-file-drop.hook"
+import { ImageIcon, UploadIcon } from "lucide-react"
 import { useCreateThumbnailUploadMutation, useGetGenresQuery, useUpdateVideoDetailsMutation } from "../../infra/api/video.api"
 import { putToPresignedUrlStore } from "../../infra/storage/put-to-presigned-url.store"
 import { ThumbnailPicker } from "../components/organisms/thumbnail-picker.component"
@@ -18,13 +19,29 @@ export type ThumbnailChoice =
   | { source: 'custom', blob: Blob, previewUrl: string }
 
 export const UploadPage = () => {
+  const navigate = useNavigate()
   const { data: genres = [], isLoading: genresLoading } = useGetGenresQuery()
-  const { phase, publicId, progress, status, error, start, reset, toErrorMessage } = useVideoUpload()
+  const {
+    phase,
+    publicId,
+    progress,
+    status,
+    error,
+    start,
+    reset,
+    toErrorMessage,
+  } = useVideoUpload()
+
+  const busy = phase === 'creating' || phase === 'uploading' || phase === 'completing'
+
   const [choice, setChoice] = useState<ThumbnailChoice | null>(null)
   const [file, setFile] = useState<File | null>(null)
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [genreIds, setGenreIds] = useState<string[]>([])
+  const [createThumbnailUpload] = useCreateThumbnailUploadMutation()
+  const [updateVideoDetails, { isLoading: saving }] = useUpdateVideoDetailsMutation()
+
   const onFileChange = (next: File | null) => {
     setFile(next)
     if (!next) return
@@ -33,18 +50,21 @@ export const UploadPage = () => {
     }
     void start(next)
   }
-  const [createThumbnailUpload] = useCreateThumbnailUploadMutation()
-  const [updateVideoDetails, { isLoading: saving }] = useUpdateVideoDetailsMutation()
-  const busy = phase === 'creating' || phase === 'uploading' || phase === 'completing'
   const { dragging } = useWindowFileDrop({ onDrop: onFileChange, disabled: busy })
+
   const [fieldErrors, setFieldErrors] = useState<{ title?: string, description?: string, genres?: string }>({})
-  const navigate = useNavigate()
+
   const validateDetails = () => {
     const next: typeof fieldErrors = {}
+
     if (title.trim().length < 7) next.title = 'Title must be at least 7 characters.'
+
     if (!description.trim()) next.description = 'Add a description.'
+
     if (!genreIds.length) next.genres = 'Select at least one genre.'
+
     setFieldErrors(next)
+
     return Object.keys(next).length === 0
   }
 
@@ -147,11 +167,16 @@ export const UploadPage = () => {
             onChange={(event) => onFileChange(event.target.files?.[0] ?? null)}
           />
           {file ? (
-            <span>
+            <span className="flex items-center justify-center center gap-4">
+              <ImageIcon />
               {file.name} ({Math.round(file.size / (1024 * 1024))} MB)
             </span>
           ) : (
-            <span>Drag & drop or click to choose a video</span>
+            <span className="flex items-center justify-center center gap-4">
+
+              <UploadIcon />
+              <p>Drag & drop or click to choose a video</p>
+            </span>
           )}
         </label>
         {publicId && file && (
