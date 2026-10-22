@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Props {
   file: File
@@ -7,16 +7,20 @@ interface Props {
 
 export const FrameTimeline = ({ file, onCapture }: Props) => {
   const videoRef = useRef<HTMLVideoElement>(null)
-  const src = useMemo(() => URL.createObjectURL(file), [file])
   const [duration, setDuration] = useState(0)
   const [time, setTime] = useState(0)
   const [unsupported, setUnsupported] = useState(false)
 
   useEffect(() => {
-    return () => {
-      URL.revokeObjectURL(src)
-    }
-  }, [src])
+    const video = videoRef.current
+
+    if (!video) return
+
+    const url = URL.createObjectURL(file)
+    video.src = url
+
+    return () => URL.revokeObjectURL(url)
+  }, [file])
 
   const seek = (seconds: number) => {
     setTime(seconds)
@@ -31,9 +35,11 @@ export const FrameTimeline = ({ file, onCapture }: Props) => {
 
     const canvas = document.createElement('canvas')
     const scale = Math.min(1, 1280 / video.videoWidth)
+
     canvas.width = Math.round(video.videoWidth * scale)
     canvas.height = Math.round(video.videoHeight * scale)
     canvas.getContext('2d')?.drawImage(video, 0, 0, canvas.width, canvas.height)
+    
     canvas.toBlob(blob => {
       if (blob) onCapture(blob, URL.createObjectURL(blob))
     }, 'image/jpeg', 0.9)
@@ -47,7 +53,6 @@ export const FrameTimeline = ({ file, onCapture }: Props) => {
     <div className="flex flex-col gap-2">
       <video
         ref={videoRef}
-        src={src}
         muted
         playsInline
         preload="auto"
