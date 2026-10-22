@@ -1,6 +1,7 @@
 import { useGetVideoQuery } from "@/modules/videos/infra/api/video.api"
 import { useState } from "react"
 import { useSearchParams } from "react-router"
+import type { ModerationStatus } from "../../domain/types/moderation-status.type"
 import { VideoPlayer } from "../components/organisms/video-player.component"
 import { loadPlayerPreferences, savePlayerPreference } from "../utils/player-preferences.util"
 
@@ -10,6 +11,13 @@ const StatusMessage = ({ title, detail }: { title: string; detail?: string }) =>
     {detail && <p className="text-sm text-primary-light">{detail}</p>}
   </section>
 )
+
+const MODERATION_MESSAGES: Partial<Record<ModerationStatus, string>> = {
+  pending: 'Seu vídeo está em análise e ainda não aparece para outras pessoas.',
+  needs_review: 'Seu vídeo foi enviado para revisão manual e ainda não aparece para outras pessoas.',
+  rejected: 'Seu vídeo foi removido por violar as diretrizes da comunidade.',
+  quarantined: 'Seu vídeo foi bloqueado por violar as diretrizes da comunidade.',
+}
 
 export const WatchPage = () => {
   const [searchParams] = useSearchParams()
@@ -23,7 +31,11 @@ export const WatchPage = () => {
     skipPollingIfUnfocused: true,
   })
 
-  if (!processingDone && (video?.processing.done || video?.status === 'failed')) setProcessingDone(true)
+  if (
+    !processingDone 
+    && (video?.processing.done || video?.status === 'failed')
+    && video?.moderation?.status !== 'pending'
+  ) setProcessingDone(true)
 
   const toggleTheater = () => {
     const next = !theater
@@ -32,10 +44,17 @@ export const WatchPage = () => {
   }
 
   if (!publicId || isError) return <StatusMessage title="Vídeo não encontrado" />
+
   if (isLoading || !video) return <StatusMessage title="Carregando..." />
+
   if (video.status === 'failed') return <StatusMessage title="Falha ao processar o vídeo" />
+
   if (!video.streamUrl) {
     return <StatusMessage title="Processando vídeo..." detail={`${video.processing.percent}% concluído`} />
+  }
+
+  if (video.moderation?.status === 'rejected' || video.moderation?.status === 'quarantined') {
+    return <StatusMessage title="Vídeo indisponível" detail={MODERATION_MESSAGES[video.moderation.status]} />
   }
 
   return (
@@ -53,7 +72,13 @@ export const WatchPage = () => {
           />
         </div>
       </div>
-
+      {video.moderation && MODERATION_MESSAGES[video.moderation.status] && (
+        <div className="mx-auto mt-4 w-full max-w-6xl px-4">
+          <p role="status" className="rounded-xl border border-warning/40 bg-warning/10 px-4 py-3 text-sm text-warning">
+            {MODERATION_MESSAGES[video.moderation.status]}
+          </p>
+        </div>
+      )}
       <section className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 py-4">
         <h1 className="text-xl font-semibold text-primary">{video.title}</h1>
         <p className="text-sm text-primary-light">
