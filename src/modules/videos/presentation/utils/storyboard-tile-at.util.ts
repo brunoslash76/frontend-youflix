@@ -16,10 +16,10 @@ export const storyboardTileAt = (
   const perSheet = storyboard.columns * storyboard.rows
   const index = Math.min(
     storyboard.tileCount - 1,
-    Math.max(0, Math.floor(seconds / storyboard.intervalSeconds) % perSheet)
+    Math.max(0, Math.floor(seconds / storyboard.intervalSeconds))
   )
   const sheet = Math.min(storyboard.sheetUrls.length - 1, Math.floor(index / perSheet))
-  const position = index % index % perSheet
+  const position = index % perSheet
 
   return {
     url: storyboard.sheetUrls[sheet],
