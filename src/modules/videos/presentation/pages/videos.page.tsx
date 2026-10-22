@@ -31,10 +31,12 @@ export const VideosPage = () => {
       {!videoFeed?.items?.length ? (
         <VideosPageEmptyStateComponent />
       ) : (
-        <div className="bg-primary-ghost">
-          <h1>{videoFeed?.personalized ? 'Recommended for you' : 'Latest videos'}</h1>
-          <div>
-            {videoFeed?.items.map(video => (
+        <div className="bg-primary-ghost pr-6">
+          <h1 className="mb-6 text-xl font-medium">
+            {videoFeed.personalized ? 'Recommended for you' : 'Latest videos'}
+          </h1>
+          <div className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+            {videoFeed.items.map(video => (
               <VideoListItemComponent key={video.publicId} video={video} />
             ))}
           </div>

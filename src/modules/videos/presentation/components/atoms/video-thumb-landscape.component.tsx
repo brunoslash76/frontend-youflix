@@ -1,19 +1,27 @@
-import type { VideoListItem } from "@/modules/videos/domain/entity/video-list-item.entity";
-import { formatDistanceToNow } from "date-fns";
+import type { VideoListItem } from "@/modules/videos/domain/entity/video-list-item.entity"
+import type { SyntheticEvent } from "react"
+import { Link } from "react-router"
+import { VideoCardMeta } from "./video-card-meta.component"
 
 interface Props {
-  video: VideoListItem;
+  video: VideoListItem
+  onLoad?: (event: SyntheticEvent<HTMLImageElement>) => void
 }
 
-export const VideoThumbLandscapeComponent = ({ video }: Props) => {
+export const VideoThumbLandscapeComponent = ({ video, onLoad }: Props) => {
   return (
-    <div>
-      <img src={video.thumbnailUrl} alt={video.title} className="w-30 object-cover" />
-      <div>
-        <p>{video.genres.map(genre => genre.name).join(', ')}</p>
-        <p>{video.views}</p>
-        <p>{formatDistanceToNow(video.createdAt)}</p>
+    <Link to={`/watch?v=${video.publicId}`} className="flex flex-col gap-3">
+      <div className="relative aspect-video overflow-hidden rounded-xl bg-background">
+        {video.thumbnailUrl && (
+          <img
+            src={video.thumbnailUrl}
+            alt=""
+            onLoad={onLoad}
+            className="h-full w-full object-cover"
+          />
+        )}
       </div>
-    </div>
+      <VideoCardMeta video={video} />
+    </Link>
   )
 }

@@ -5,6 +5,10 @@ export interface VideoListItem {
   title: string;
   genres: GenreEntity[];
   views: number;
-  createdAt: Date;
+  author: {
+    id: string;
+    username: string;
+  };
+  createdAt: string;
   thumbnailUrl: string | null;
 }
